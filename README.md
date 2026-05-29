@@ -3,6 +3,18 @@
 
 ---
 
+## System Architecture
+
+![Architecture Diagram](assets/architecture-diagram.png)
+
+---
+
+## Live Demo
+
+![Demo](assets/demo.mp4)
+
+---
+
 ## Real-Time Streaming Architecture
 
 ```text
