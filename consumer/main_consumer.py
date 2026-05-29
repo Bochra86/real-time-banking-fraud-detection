@@ -9,8 +9,9 @@ from consumer.statistics import (update_statistics, print_statistics)
 
 from consumer.storage import (save_suspicious_transaction)
 
-from config.settings import (KAFKA_BROKER,
-    TOPIC_NAME, LOG_FILE)
+from config.settings import (KAFKA_BROKER, TOPIC_NAME, LOG_FILE)
+
+from consumer.database import save_to_postgresql
 
 # Create folders if they don't exist
 os.makedirs("logs", exist_ok=True)
@@ -57,6 +58,8 @@ while True:
         logging.warning(f"Suspicious transaction: {transaction}")
 
         save_suspicious_transaction(transaction)
+
+        save_to_postgresql(transaction) 
 
     # Print live statistics
     print_statistics()

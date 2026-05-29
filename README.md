@@ -10,9 +10,17 @@
 
 ---
 
-## Live Demo
+## Live System Demo
 
-🎥 [Watch the Kafka Streaming Demo](assets/demo.mp4)
+![Demo](assets/demo.gif)
+
+---
+
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![Kafka](https://img.shields.io/badge/Apache-Kafka-black)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-blue)
+![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-red)
+
 
 ---
 
@@ -144,6 +152,14 @@ The dashboard displays:
 * fraud metrics
 * fraud amount analytics
 * real-time updates
+
+---
+
+## PostgreSQL Database Storage
+
+![PostgreSQL Data](assets/postgresql-data.png)
+
+Suspicious transactions are persisted in PostgreSQL for real-time analytics and dashboard monitoring.
 
 ---
 
@@ -351,6 +367,14 @@ El dashboard muestra:
 * métricas de fraude
 * analíticas de montos fraudulentos
 * actualizaciones en tiempo real
+
+---
+
+## Almacenamiento en PostgreSQL
+
+![PostgreSQL Data](assets/postgresql-data.png)
+
+Las transacciones sospechosas se almacenan en PostgreSQL para analítica en tiempo real y monitoreo del dashboard.
 
 ---
 

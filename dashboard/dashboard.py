@@ -1,48 +1,113 @@
 import streamlit as st
 import pandas as pd
 import time
+from dotenv import load_dotenv
 import os
 
-st.set_page_config(page_title="Banking Fraud Dashboard", layout="wide")
+from sqlalchemy import create_engine
+from urllib.parse import quote_plus
+
+load_dotenv()
+
+#Credentials
+db_host = os.getenv("DB_HOST")
+db_name = os.getenv("DB_NAME")
+db_user = os.getenv("DB_USER")
+db_password = quote_plus(os.getenv("DB_PASSWORD"))
+db_port = os.getenv("DB_PORT")
+
+# PostgreSQL Connection
+engine = create_engine(f"postgresql+psycopg2://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}")
+
+# Streamlit Configuration
+st.set_page_config(
+    page_title="Banking Fraud Dashboard",
+    layout="wide"
+)
 
 st.title("🚨 Real-Time Banking Fraud Dashboard")
 
-csv_file = "output/suspicious_transactions.csv"
+st.caption("Dashboard refreshes every 5 seconds")
 
+
+# Dashboard Placeholder
 placeholder = st.empty()
+
 
 while True:
 
     with placeholder.container():
 
-        st.subheader("Suspicious Transactions")
+        try:
 
-        if os.path.exists(csv_file):
+            # Read data from PostgreSQL
+            df = pd.read_sql(
+                "SELECT * FROM suspicious_transactions",
+                engine
+            )
 
-            df = pd.read_csv(csv_file)
+            if not df.empty:
 
-            total_suspicious = len(df)
+                # Metrics
+                total_suspicious = len(df)
 
-            total_amount = df["amount"].sum()
+                total_amount = df["amount"].sum()
 
-            average_amount = df["amount"].mean()
+                average_amount = df["amount"].mean()
 
-            col1, col2, col3 = st.columns(3)
+                highest_amount = df["amount"].max()
 
-            col1.metric("Suspicious Transactions", total_suspicious)
+                city_counts = df["city"].value_counts()
 
-            col2.metric("Total Fraud Amount", f"${total_amount:.2f}")
+                # KPI Metrics
+                col1, col2, col3, col4 = st.columns(4)
 
-            col3.metric("Average Fraud Amount", f"${average_amount:.2f}")
+                col1.metric(
+                    "Suspicious Transactions",
+                    total_suspicious
+                )
 
-            st.dataframe(df)
+                col2.metric(
+                    "Total Fraud Amount",
+                    f"${total_amount:.2f}"
+                )
 
-            st.subheader("Fraud Amount Distribution")
+                col3.metric(
+                    "Average Fraud Amount",
+                    f"${average_amount:.2f}"
+                )
 
-            st.bar_chart(df["amount"])
+                col4.metric(
+                    "Highest Fraud Amount",
+                    f"${highest_amount:.2f}"
+                )
 
-        else:
+                # Fraud Amount Distribution
+                st.subheader("Fraud Amount Distribution")
 
-            st.warning("No suspicious transactions yet.")
+                st.line_chart(df["amount"])
+
+                # Fraud by City
+                st.subheader("Fraud Transactions by City")
+
+                st.bar_chart(city_counts)
+
+                # Latest Transactions
+                st.subheader("Latest Suspicious Transactions")
+
+                st.dataframe(
+                    df.sort_values(
+                        by="created_at",
+                        ascending=False
+                    )
+                )
+
+            else:
+
+                st.warning("No suspicious transactions found.")
+
+        except Exception as error:
+
+            st.error(f"Database Error: {error}")
 
     time.sleep(5)
