@@ -11,7 +11,7 @@
 
 ## Live Demo
 
-![Demo](assets/demo.mp4)
+🎥 [Watch the Kafka Streaming Demo](assets/demo.mp4)
 
 ---
 
