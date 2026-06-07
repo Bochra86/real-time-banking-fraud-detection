@@ -166,8 +166,11 @@ banking-kafka-project/
 ├── .env
 └── .gitignore
 
+```
 ---
 ## REST API Layer
+
+![FastAPI Swagger Docs](assets/swagger_api.png)
 
 The project includes a production-style FastAPI service exposing fraud analytics endpoints.
 
@@ -190,10 +193,39 @@ GET /api/frauds/highest
 GET /api/statistics
 GET /api/frauds/by-city
 GET /api/frauds/daily-summary
+---
+
+## Redis Cache
+
+![Redis Cache](assets/redis_cache.png)
+
+The API uses Redis to cache analytics results and reduce database queries.
+
+Cached data includes:
+
+- Fraud statistics
+- Frauds by city
+- Daily summaries
+- Latest frauds
+- Highest frauds
+
+Benefits:
+
+- Faster responses
+- Reduced PostgreSQL load
+- Automatic cache expiration (TTL)
+
+### Example
+
+```text
+cache_miss → PostgreSQL → Redis
+cache_hit  → Redis
 ```
 
 ---
 ## Testing
+
+![Coverage Report](assets/test_coverage.png)
 
 The project includes automated unit tests for:
 
@@ -203,7 +235,7 @@ The project includes automated unit tests for:
 - Exception handlers
 - API routes
 
-Current coverage:
+Current test coverage:
 
 ```text
 100%
@@ -213,6 +245,8 @@ Tests are executed automatically through GitHub Actions.
 
 ---
 ## Continuous Integration
+
+![GitHub Actions](assets/github_actions.png)
 
 The project uses GitHub Actions for automated CI/CD validation.
 
@@ -429,26 +463,26 @@ This project was created to practice:
 
 ## Descripción General
 
-Este proyecto simula un sistema de detección de fraude bancario en tiempo real utilizando Apache Kafka, Python, PostgreSQL y Streamlit.
+Este proyecto simula un sistema de detección de fraude bancario en tiempo real utilizando Apache Kafka, Python, PostgreSQL, Redis, FastAPI y Streamlit.
 
-El pipeline genera continuamente transacciones bancarias, las transmite mediante Kafka, las procesa en tiempo real, detecta actividades sospechosas, almacena transacciones fraudulentas en PostgreSQL y archivos CSV, registra eventos y visualiza analíticas de fraude mediante un dashboard en vivo.
-
-El proyecto demuestra conceptos utilizados en sistemas modernos de fintech, backend engineering y data engineering.
+El pipeline genera transacciones bancarias simuladas, las transmite mediante Kafka, las procesa en tiempo real, detecta actividades sospechosas, almacena los resultados en PostgreSQL y archivos CSV, expone analíticas mediante una API REST con FastAPI y visualiza métricas en un dashboard interactivo.
 
 ---
 
 ## Características Principales
 
 * Arquitectura orientada a eventos
-* Pipeline Producer/Consumer con Kafka
-* Arquitectura modular en Python
-* Procesamiento en tiempo real
-* Detección de fraude
+* Streaming en tiempo real con Apache Kafka
+* Productores y consumidores desacoplados
+* Detección de fraude en tiempo real
 * Persistencia en PostgreSQL
-* Exportación CSV
-* Sistema de logs y monitoreo
-* Dashboard en tiempo real
-
+* Exportación de datos a CSV
+* API REST con FastAPI
+* Caché con Redis
+* Logging estructurado
+* Dashboard interactivo con Streamlit
+* Pruebas automatizadas con Pytest
+* Integración continua con GitHub Actions
 
 ---
 
@@ -458,13 +492,10 @@ El proyecto demuestra conceptos utilizados en sistemas modernos de fintech, back
 * Apache Kafka
 * PostgreSQL
 * SQLAlchemy
-* Streamlit
-* Pandas
-* JSON
-* CSV
-* Logging
 * FastAPI
 * Redis
+* Streamlit
+* Pandas
 * Pytest
 * Coverage
 * GitHub Actions
@@ -472,27 +503,101 @@ El proyecto demuestra conceptos utilizados en sistemas modernos de fintech, back
 
 ---
 
-## Vista del Dashboard
+## API REST
 
-![Dashboard](assets/dashboard.png)
+La aplicación incluye una API desarrollada con FastAPI para consultar información sobre fraude bancario.
+
+Endpoints disponibles:
+
+```text
+GET /api/frauds
+GET /api/latest-frauds
+GET /api/frauds/highest
+GET /api/statistics
+GET /api/frauds/by-city
+GET /api/frauds/daily-summary
+```
+
+Características:
+
+* Paginación
+* Filtros
+* Logging estructurado
+* Caché con Redis
+* Manejo centralizado de excepciones
+* Documentación Swagger/OpenAPI
+
+---
+
+## Caché con Redis
+
+Redis se utiliza para almacenar resultados de consultas frecuentes y reducir la carga sobre PostgreSQL.
+
+Datos almacenados en caché:
+
+* Estadísticas de fraude
+* Fraudes por ciudad
+* Resúmenes diarios
+* Últimos fraudes detectados
+* Fraudes con mayor importe
+
+Beneficios:
+
+* Respuestas más rápidas
+* Menor carga en la base de datos
+* Escalabilidad mejorada
+* Expiración automática de caché (TTL)
+
+---
+
+## Pruebas Automatizadas
+
+El proyecto incluye pruebas unitarias para:
+
+* Servicios de fraude
+* Servicios analíticos
+* Capa de Redis
+* Manejadores de excepciones
+* Endpoints de la API
+
+Cobertura actual:
+
+```text
+100%
+```
+
+---
+
+## Integración Continua
+
+GitHub Actions ejecuta automáticamente:
+
+* Instalación de dependencias
+* Ejecución de pruebas
+* Validación de cobertura
+
+en cada push al repositorio.
 
 ---
 
 ## Futuras Mejoras
 
-* API REST con FastAPI
-* Docker
-* Despliegue en la nube
 * PySpark Structured Streaming
-* Machine Learning para fraude
+* Modelos de Machine Learning para scoring de fraude
+* Despliegue en AWS
+* Despliegue en Azure
+* Contenedorización con Docker
+* Sistema de alertas en tiempo real
 
 ---
 
 ## Objetivos de Aprendizaje
 
-* arquitectura orientada a eventos
-* streaming con Kafka
-* analítica en tiempo real
-* backend engineering
-* data engineering
-* sistemas de detección de fraude
+* Arquitecturas orientadas a eventos
+* Sistemas de streaming con Kafka
+* Analítica en tiempo real
+* Backend Engineering
+* Data Engineering
+* Sistemas de detección de fraude
+* APIs modernas con FastAPI
+* Estrategias de caché con Redis

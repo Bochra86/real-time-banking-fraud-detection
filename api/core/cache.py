@@ -10,6 +10,7 @@ cache = redis.Redis(
     decode_responses=True
 )
 
+
 def get_cache(key):
 
     try:

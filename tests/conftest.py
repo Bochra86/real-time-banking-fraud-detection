@@ -4,6 +4,7 @@ import pytest
 
 client = TestClient(app)
 
+
 @pytest.fixture
 def test_client():
     return client

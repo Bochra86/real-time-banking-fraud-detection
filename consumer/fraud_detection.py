@@ -1,5 +1,6 @@
 from config.settings import (FRAUD_AMOUNT_THRESHOLD, RISKY_CITIES)
 
+
 def is_suspicious(transaction):
 
     amount = transaction["amount"]

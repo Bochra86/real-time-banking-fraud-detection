@@ -9,7 +9,9 @@ def setup_logging():
 
     handler = logging.StreamHandler(sys.stdout)
 
-    formatter = jsonlogger.JsonFormatter("%(asctime)s %(levelname)s %(name)s %(message)s %(module)s"    )
+    formatter = jsonlogger.JsonFormatter(
+        "%(asctime)s %(levelname)s %(name)s %(message)s %(module)s"
+        )
 
     handler.setFormatter(formatter)
 
@@ -19,7 +21,7 @@ def setup_logging():
     # MODULE-SPECIFIC LOG LEVELS
     # -----------------------------
     LOG_LEVEL = {"api.services.analytics_service": logging.DEBUG,
-                 "api.services.fraud_service": logging.INFO,}
-    
+                 "api.services.fraud_service": logging.INFO}
+
     for name, level in LOG_LEVEL.items():
         logging.getLogger(name).setLevel(level)

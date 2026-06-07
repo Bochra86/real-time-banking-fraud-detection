@@ -5,8 +5,10 @@ from sqlalchemy.exc import SQLAlchemyError
 from api.services.fraud_service import get_frauds, get_latest_frauds, highest_frauds
 from api.exceptions import DatabaseError
 
-#get_frauds()
-#test1  city_filter
+# get_frauds()
+# test1  city_filter
+
+
 def test_get_frauds_city_filter():
 
     mock_db = MagicMock()
@@ -32,7 +34,9 @@ def test_get_frauds_city_filter():
 
     assert result["total_records"] == 1
 
-#test2 min_amount_filter
+# test2 min_amount_filter
+
+
 def test_get_frauds_min_amount_filter():
 
     mock_db = MagicMock()
@@ -58,7 +62,9 @@ def test_get_frauds_min_amount_filter():
 
     assert result["total_records"] == 1
 
-#test3 sort_asc
+# test3 sort_asc
+
+
 def test_get_frauds_sort_asc():
 
     mock_db = MagicMock()
@@ -83,7 +89,9 @@ def test_get_frauds_sort_asc():
 
     query.order_by.assert_called_once()
 
-#test4 pagination
+# test4 pagination
+
+
 def test_frauds_pagination(test_client):
 
     response = test_client.get("/api/frauds?page=999")
@@ -95,7 +103,9 @@ def test_frauds_pagination(test_client):
     assert data["page"] == 999
     assert len(data["data"]) == 0
 
-#test5 db_error
+# test5 db_error
+
+
 def test_get_frauds_db_error():
 
     mock_db = MagicMock()
@@ -110,8 +120,10 @@ def test_get_frauds_db_error():
         )
 
 
-#get_latest_frauds()
-#test1 cache miss
+# get_latest_frauds()
+# test1 cache miss
+
+
 @patch("api.services.fraud_service.set_cache")
 @patch("api.services.fraud_service.get_cache")
 def test_get_latest_frauds_cache_miss(
@@ -144,7 +156,9 @@ def test_get_latest_frauds_cache_miss(
 
     assert len(result) == 1
 
-#test2 cache hit
+# test2 cache hit
+
+
 @patch("api.services.fraud_service.get_cache")
 def test_get_latest_frauds_cache_hit(mock_cache):
 
@@ -161,8 +175,10 @@ def test_get_latest_frauds_cache_hit(mock_cache):
     result = get_latest_frauds(MagicMock())
 
     assert len(result) == 1
-    
-#test3 db_error
+
+# test3 db_error
+
+
 @patch("api.services.fraud_service.get_cache")
 def test_get_latest_frauds_db_error(mock_cache):
 
@@ -175,8 +191,10 @@ def test_get_latest_frauds_db_error(mock_cache):
         get_latest_frauds(mock_db)
 
 
-#highest_fraud()
-#test1 cache_miss
+# highest_fraud()
+# test1 cache_miss
+
+
 @patch("api.services.fraud_service.set_cache")
 @patch("api.services.fraud_service.get_cache")
 def test_highest_frauds_cache_miss(
@@ -209,8 +227,10 @@ def test_highest_frauds_cache_miss(
     result = highest_frauds(mock_db)
 
     assert len(result) == 1
-    
-#test2 cache_hit
+
+# test2 cache_hit
+
+
 @patch("api.services.fraud_service.get_cache")
 def test_highest_frauds_cache_hit(mock_cache):
 
@@ -230,7 +250,9 @@ def test_highest_frauds_cache_hit(mock_cache):
     assert len(result) == 1
     assert result[0]["amount"] == 5000.0
 
-#test3 db_error
+# test3 db_error
+
+
 @patch("api.services.fraud_service.get_cache")
 def test_highest_frauds_db_error(mock_cache):
 

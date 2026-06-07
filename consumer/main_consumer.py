@@ -14,13 +14,13 @@ os.makedirs("logs", exist_ok=True)
 os.makedirs("output", exist_ok=True)
 
 # Logging configuration
-logging.basicConfig(filename=LOG_FILE, 
-                    level=logging.INFO, 
+logging.basicConfig(filename=LOG_FILE,
+                    level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Kafka Consumer
-consumer = Consumer({'bootstrap.servers': KAFKA_BROKER, 
-                     'group.id': 'banking-group', 
+consumer = Consumer({'bootstrap.servers': KAFKA_BROKER,
+                     'group.id': 'banking-group',
                      'auto.offset.reset': 'earliest'})
 
 consumer.subscribe([TOPIC_NAME])
@@ -45,7 +45,7 @@ while True:
     logging.info(f"Transaction received: {transaction}")
 
     # Fraud detection
-    suspicious = is_suspicious(transaction) # bool
+    suspicious = is_suspicious(transaction)  # bool
 
     # Update statistics
     update_statistics(transaction, suspicious)
@@ -59,7 +59,7 @@ while True:
 
         save_suspicious_transaction(transaction)
 
-        save_to_postgresql(transaction) 
+        save_to_postgresql(transaction)
 
     # Print live statistics
     print_statistics()

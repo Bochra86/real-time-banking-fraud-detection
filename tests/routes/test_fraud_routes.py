@@ -1,4 +1,6 @@
-#Test fraud list
+# Test fraud list
+
+
 def test_get_frauds(test_client):
 
     response = test_client.get(
@@ -14,7 +16,9 @@ def test_get_frauds(test_client):
     assert "total_records" in data
     assert "data" in data
 
-#Test invalid page  
+# Test invalid page
+
+
 def test_invalid_page(test_client):
 
     response = test_client.get(
@@ -24,7 +28,9 @@ def test_invalid_page(test_client):
     assert response.status_code == 422
 
 
-#Test latest frauds
+# Test latest frauds
+
+
 def test_latest_frauds(test_client):
 
     response = test_client.get(
@@ -38,7 +44,9 @@ def test_latest_frauds(test_client):
         list
     )
 
-#Test highest frauds
+# Test highest frauds
+
+
 def test_highest_frauds(test_client):
 
     response = test_client.get(
@@ -52,7 +60,9 @@ def test_highest_frauds(test_client):
     assert isinstance(data, list)
 
 
-#Test frauds sorted in descending order
+# Test frauds sorted in descending order
+
+
 def test_frauds_sort_desc(test_client):
 
     response = test_client.get(

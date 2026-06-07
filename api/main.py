@@ -1,5 +1,4 @@
-from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI
 from api.routes.fraud_routes import router as fraud_router
 from api.exceptions import DatabaseError
 from api.core.exception_handlers import database_exception_handler
@@ -36,6 +35,8 @@ app.include_router(fraud_router, prefix="/api")
 # -------------------------
 # ROOT ENDPOINTS
 # -------------------------
+
+
 @app.get("/")
 def home():
     return {"message": "Real-Time Banking Fraud Detection API"}

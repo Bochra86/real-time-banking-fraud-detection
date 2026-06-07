@@ -1,7 +1,21 @@
+# Local experimental PySpark prototype.
+# Paths are configured for a Windows development environment.
+# Not currently integrated into the main production pipeline.
 import os
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import *
-from pyspark.sql.types import *
+from pyspark.sql.functions import (
+    col,
+    from_json,
+    when,
+)
+
+from pyspark.sql.types import (
+    StructType,
+    StructField,
+    IntegerType,
+    DoubleType,
+    StringType,
+)
 
 os.environ["HADOOP_HOME"] = "C:\\hadoop"
 os.environ["hadoop.home.dir"] = "C:\\hadoop"

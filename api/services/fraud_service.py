@@ -16,60 +16,78 @@ CACHE_TTL_SECONDS = 60
 
 # 1.Get all frauds with filters
 
-def get_frauds(db: Session,   
+
+def get_frauds(db: Session,
                page: int,
                page_size: int,
                min_amount: float | None = None,
                city: str | None = None,
                sort: str = "desc") -> dict[str, Any]:
-   try:
+    try:
 
-    query = db.query(SuspiciousTransaction)
-    if min_amount is not None:
+        query = db.query(SuspiciousTransaction)
+        if min_amount is not None:
             query = query.filter(SuspiciousTransaction.amount >= min_amount)
 
-    if city:
+        if city:
             query = query.filter(SuspiciousTransaction.city == city)
 
-    query = query.order_by(SuspiciousTransaction.amount.desc() if sort == "desc" else SuspiciousTransaction.amount.asc())
+        query = query.order_by(
+            SuspiciousTransaction.amount.desc()
+            if sort == "desc" else SuspiciousTransaction.amount.asc()
+            )
 
-    offset = (page - 1) * page_size
-    total_records = query.count()
-    results = (query.offset(offset).limit(page_size).all())
+        offset = (page - 1) * page_size
+        total_records = query.count()
+        results = (query.offset(offset).limit(page_size).all())
 
-    logger.info({"event": "fraud_fetched",
-                 "page": page,
-                 "page_size": page_size,
-                 "city": city,
-                 "count": len(results)})
-    
-    return {"page": page, 
-            "page_size": page_size, 
-            "total_records": total_records, 
-            "data": results}
-   
-   except SQLAlchemyError as e:
-    logger.exception({"event": "Database retrieving fraud records failed",
-                      "error": str(e)})
-    raise DatabaseError( "Unable to retrieve fraud records") from e
+        logger.info(
+            {
+                "event": "fraud_fetched",
+                "page": page,
+                "page_size": page_size,
+                "city": city,
+                "count": len(results)
+                }
+                )
+
+        return {
+            "page": page,
+            "page_size": page_size,
+            "total_records": total_records,
+            "data": results
+            }
+
+    except SQLAlchemyError as e:
+        logger.exception(
+            {
+                "event": "Database retrieving fraud records failed",
+                "error": str(e)
+                }
+                )
+        raise DatabaseError("Unable to retrieve fraud records") from e
 
 
 # 2.Get latest frauds
-def get_latest_frauds(db: Session)->  list[dict[str, Any]]:
 
-    try:   
-        cache_key = "latest_frauds"    
-        cached = get_cache(cache_key)    
+
+def get_latest_frauds(db: Session) -> list[dict[str, Any]]:
+
+    try:
+        cache_key = "latest_frauds"
+        cached = get_cache(cache_key)
         if cached:
             logger.info({"event": "cache_hit",
                          "key": cache_key})
-            return cached 
-        
+            return cached
+
         logger.info({"event": "cache_miss",
                      "key": cache_key})
 
-        
-        results = db.query(SuspiciousTransaction).order_by(SuspiciousTransaction.created_at.desc()).limit(10).all()
+        results = db.query(SuspiciousTransaction)\
+                    .order_by(SuspiciousTransaction.created_at.desc())\
+                    .limit(10)\
+                    .all()
         cache_data = [{
             "transaction_id": row.transaction_id,
             "user_id": row.user_id,
@@ -79,10 +97,10 @@ def get_latest_frauds(db: Session)->  list[dict[str, Any]]:
 
         set_cache(cache_key, cache_data, ttl=CACHE_TTL_SECONDS)
 
-        logger.info({"event": "latest_frauds_retrieved", 
+        logger.info({"event": "latest_frauds_retrieved",
                      "count": len(results)})
-        return cache_data  
-    
+        return cache_data
+
     except SQLAlchemyError as e:
 
         logger.exception({"event": "Retrieving latest fraud records failed",
@@ -92,7 +110,9 @@ def get_latest_frauds(db: Session)->  list[dict[str, Any]]:
 
 
 # 3.Highest fraud transactions
-def highest_frauds(db: Session)-> list[dict[str, Any]]:
+
+
+def highest_frauds(db: Session) -> list[dict[str, Any]]:
 
     try:
         cache_key = "highest_frauds"
@@ -102,12 +122,14 @@ def highest_frauds(db: Session)-> list[dict[str, Any]]:
             logger.info({"event": "cache_hit",
                          "key": cache_key})
             return cached
-        
+
         logger.info({"event": "cache_miss",
                      "key": cache_key})
 
-        results = (db.query(SuspiciousTransaction).order_by(SuspiciousTransaction.amount.desc()).limit(10).all())
-       
+        results = (db.query(SuspiciousTransaction)
+                     .order_by(SuspiciousTransaction.amount.desc())
+                     .limit(10).all())
+
         cache_data = [{
             "id": row.id,
             "transaction_id": row.transaction_id,
@@ -117,13 +139,13 @@ def highest_frauds(db: Session)-> list[dict[str, Any]]:
             "created_at": row.created_at.isoformat()
             if row.created_at else None}for row in results]
 
-        set_cache(cache_key, cache_data, ttl=CACHE_TTL_SECONDS,)
-   
+        set_cache(cache_key, cache_data, ttl=CACHE_TTL_SECONDS)
+
         logger.info({"event": "highest_frauds_retrieved", "count": len(results)})
         return cache_data
-    
+
     except SQLAlchemyError as e:
-        
+
         logger.exception({"event": "Retrieving highest fraud records failed",
                           "error": str(e)})
 

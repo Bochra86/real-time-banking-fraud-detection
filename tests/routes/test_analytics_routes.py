@@ -1,4 +1,6 @@
 # Statistics endpoint
+
+
 def test_statistics(test_client):
 
     response = test_client.get(
@@ -12,6 +14,8 @@ def test_statistics(test_client):
     assert isinstance(data, dict)
 
 # By city endpoint
+
+
 def test_frauds_by_city(test_client):
 
     response = test_client.get(
@@ -26,6 +30,8 @@ def test_frauds_by_city(test_client):
     )
 
 # Daily summary endpoint
+
+
 def test_daily_summary(test_client):
 
     response = test_client.get(
@@ -38,4 +44,3 @@ def test_daily_summary(test_client):
         response.json(),
         list
     )
-

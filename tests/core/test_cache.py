@@ -1,7 +1,9 @@
 from api.core.cache import set_cache
 from api.core.cache import get_cache
 
-#TEST 1 — “cache miss”
+# TEST 1 — “cache miss”
+
+
 def test_get_cache_miss(monkeypatch):
     class FakeRedis:
         def get(self, key):
@@ -13,7 +15,9 @@ def test_get_cache_miss(monkeypatch):
 
     assert result is None
 
-#TEST 2 — “cache hit”
+# TEST 2 — “cache hit”
+
+
 def test_get_cache_hit(monkeypatch):
     class FakeRedis:
         def get(self, key):
@@ -26,7 +30,9 @@ def test_get_cache_hit(monkeypatch):
     assert result == {"name": "bochra"}
 
 
-#TEST 3 — “set cache with TTL”
+# TEST 3 — “set cache with TTL”
+
+
 def test_set_cache(monkeypatch):
     class FakeRedis:
         def set(self, *args, **kwargs):
@@ -36,7 +42,9 @@ def test_set_cache(monkeypatch):
 
     set_cache("key", "value", ttl=60)
 
-#TEST 4 — “Redis read failure”
+# TEST 4 — “Redis read failure”
+
+
 def test_get_cache_exception(monkeypatch):
 
     class FakeRedis:
@@ -49,7 +57,9 @@ def test_get_cache_exception(monkeypatch):
 
     assert result is None
 
-#TEST 4 — “Redis write failure”
+# TEST 4 — “Redis write failure”
+
+
 def test_set_cache_exception(monkeypatch):
 
     class FakeRedis:
