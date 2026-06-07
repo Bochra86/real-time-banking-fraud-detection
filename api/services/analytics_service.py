@@ -28,9 +28,6 @@ def get_statistics() -> dict:
         logger.info({"event": "cache_miss",
                      "key": cache_key})
 
-        if engine is None:
-            raise DatabaseError("Database is not configured")
-
         query = """
         SELECT
             COUNT(*) AS total_frauds,
