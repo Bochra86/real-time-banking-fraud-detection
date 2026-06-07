@@ -193,6 +193,7 @@ GET /api/frauds/highest
 GET /api/statistics
 GET /api/frauds/by-city
 GET /api/frauds/daily-summary
+```
 ---
 
 ## Redis Cache
