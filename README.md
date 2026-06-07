@@ -17,9 +17,13 @@
 ---
 
 ![Python](https://img.shields.io/badge/Python-3.11-blue)
-![Kafka](https://img.shields.io/badge/Apache-Kafka-black)
+![FastAPI](https://img.shields.io/badge/FastAPI-API-green)
+![Apache Kafka](https://img.shields.io/badge/Apache-Kafka-black)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-blue)
-![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-red)
+![Redis](https://img.shields.io/badge/Redis-Cache-red)
+![Pytest](https://img.shields.io/badge/Pytest-Testing-yellow)
+![GitHub Actions](https://img.shields.io/badge/GitHub-Actions-success)
+![PySpark](https://img.shields.io/badge/PySpark-Streaming-orange)
 
 ---
 
@@ -250,6 +254,12 @@ Tests are executed automatically through GitHub Actions.
 ![GitHub Actions](assets/github_actions.png)
 
 The project uses GitHub Actions for automated CI/CD validation.
+
+GitHub Actions automatically runs:
+
+- Flake8 linting
+- Pytest unit tests
+- Coverage checks
 
 On every push:
 
