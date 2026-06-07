@@ -1,10 +1,11 @@
 import os
-os.environ["HADOOP_HOME"] = "C:\\hadoop"
-os.environ["hadoop.home.dir"] = "C:\\hadoop"
-
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
 from pyspark.sql.types import *
+
+os.environ["HADOOP_HOME"] = "C:\\hadoop"
+os.environ["hadoop.home.dir"] = "C:\\hadoop"
+
 
 # Create Spark session
 spark = SparkSession.builder \

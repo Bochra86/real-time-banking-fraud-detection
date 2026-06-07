@@ -20,31 +20,23 @@ db_port = os.getenv("DB_PORT")
 engine = create_engine(f"postgresql+psycopg2://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}")
 
 # Streamlit Configuration
-st.set_page_config(
-    page_title="Banking Fraud Dashboard",
-    layout="wide"
-)
+st.set_page_config(page_title="Banking Fraud Dashboard",
+                   layout="wide")
 
 st.title("🚨 Real-Time Banking Fraud Dashboard")
 
 st.caption("Dashboard refreshes every 5 seconds")
 
-
 # Dashboard Placeholder
 placeholder = st.empty()
-
 
 while True:
 
     with placeholder.container():
 
         try:
-
             # Read data from PostgreSQL
-            df = pd.read_sql(
-                "SELECT * FROM suspicious_transactions",
-                engine
-            )
+            df = pd.read_sql("SELECT * FROM suspicious_transactions", engine)
 
             if not df.empty:
 
@@ -62,25 +54,13 @@ while True:
                 # KPI Metrics
                 col1, col2, col3, col4 = st.columns(4)
 
-                col1.metric(
-                    "Suspicious Transactions",
-                    total_suspicious
-                )
+                col1.metric("Suspicious Transactions", total_suspicious)
 
-                col2.metric(
-                    "Total Fraud Amount",
-                    f"${total_amount:.2f}"
-                )
+                col2.metric("Total Fraud Amount", f"${total_amount:.2f}")
 
-                col3.metric(
-                    "Average Fraud Amount",
-                    f"${average_amount:.2f}"
-                )
+                col3.metric("Average Fraud Amount", f"${average_amount:.2f}")
 
-                col4.metric(
-                    "Highest Fraud Amount",
-                    f"${highest_amount:.2f}"
-                )
+                col4.metric("Highest Fraud Amount", f"${highest_amount:.2f}")
 
                 # Fraud Amount Distribution
                 st.subheader("Fraud Amount Distribution")
@@ -95,12 +75,7 @@ while True:
                 # Latest Transactions
                 st.subheader("Latest Suspicious Transactions")
 
-                st.dataframe(
-                    df.sort_values(
-                        by="created_at",
-                        ascending=False
-                    )
-                )
+                st.dataframe(df.sort_values(by="created_at", ascending=False))
 
             else:
 

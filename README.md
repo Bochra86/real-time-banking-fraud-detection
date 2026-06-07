@@ -10,7 +10,7 @@
 
 ---
 
-## Live System Demo
+## Live Demo
 
 ![Demo](assets/demo.gif)
 
@@ -21,6 +21,31 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-blue)
 ![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-red)
 
+---
+
+# 🇺🇸 English Version
+
+## Overview
+
+This project simulates a real-time banking fraud detection system using Apache Kafka, Python, PostgreSQL, and Streamlit.
+
+The pipeline continuously generates banking transactions, streams them through Kafka, processes them in real time, detects suspicious activities, stores suspicious transactions in PostgreSQL and CSV files, logs events, and visualizes fraud analytics through a live dashboard.
+
+The project demonstrates concepts commonly used in modern fintech, backend engineering, and data engineering systems.
+
+---
+
+## Engineering Highlights
+
+* Event-driven streaming architecture
+* Apache Kafka producer/consumer pipeline
+* Modular Python project structure
+* Real-time fraud detection workflow
+* PostgreSQL persistence layer
+* CSV persistence and reporting
+* Centralized logging and monitoring
+* Real-time analytics dashboard
+* Streamlit live visualization
 
 ---
 
@@ -29,43 +54,22 @@
 ```text
 Python Producer
         ↓
-Apache Kafka Topic
+Apache Kafka
         ↓
-Modular Consumer Analytics
+Consumer Analytics Engine
         ↓
-Fraud Detection Engine
+Fraud Detection Logic
         ↓
-CSV Storage + Logging
+PostgreSQL + CSV Storage
         ↓
-Streamlit Real-Time Dashboard
+FastAPI Analytics Layer
+        ↓
+Redis Cache
+        ↓
+REST API Endpoints
+        ↓
+Streamlit Dashboard
 ```
-
----
-
-# 🇺🇸 English Version
-
-## Overview
-
-This project simulates a real-time banking fraud detection system using Apache Kafka, Python, and Streamlit.
-
-The pipeline continuously generates banking transactions, streams them through Kafka, processes them in real time, detects suspicious activities, stores suspicious transactions into CSV files, logs events, and visualizes fraud analytics through a live dashboard.
-
-The project demonstrates concepts commonly used in modern fintech, backend engineering, and data engineering systems.
-
----
-
-## Features
-
-* Real-time transaction streaming
-* Apache Kafka producer/consumer architecture
-* Modular project architecture
-* Fraud detection engine
-* CSV persistence layer
-* Logging and monitoring system
-* Real-time fraud analytics
-* Streamlit live dashboard
-* Event-driven pipeline design
-* Real-time suspicious transaction visualization
 
 ---
 
@@ -74,11 +78,19 @@ The project demonstrates concepts commonly used in modern fintech, backend engin
 * Python
 * Apache Kafka
 * confluent-kafka
+* PostgreSQL
+* SQLAlchemy
 * Streamlit
 * Pandas
 * JSON
 * CSV
 * Logging
+* FastAPI
+* Redis
+* Pytest
+* Coverage
+* GitHub Actions
+* Pydantic
 
 ---
 
@@ -88,12 +100,11 @@ The project demonstrates concepts commonly used in modern fintech, backend engin
 banking-kafka-project/
 │
 ├── producer/
-│   ├── __init__.py
 │   └── main_producer.py
 │
 ├── consumer/
-│   ├── __init__.py
 │   ├── main_consumer.py
+│   ├── database.py
 │   ├── fraud_detection.py
 │   ├── statistics.py
 │   └── storage.py
@@ -101,8 +112,41 @@ banking-kafka-project/
 ├── dashboard/
 │   └── dashboard.py
 │
+├── api/
+│   ├── main.py
+│   │
+│   ├── routes/
+│   │   └── fraud_routes.py
+│   │
+│   ├── services/
+│   │   ├── fraud_service.py
+│   │   └── analytics_service.py
+│   │
+│   ├── schemas/
+│   │   └── fraud_schema.py
+│   │
+│   ├── models/
+│   │   └── fraud_model.py
+│   │
+│   ├── database/
+│   │   ├── connection.py
+│   │   └── dependencies.py
+│   │
+│   ├── core/
+│   │   ├── cache.py
+│   │   ├── logging.py
+│   │   ├── middleware.py
+│   │   └── exception_handlers.py
+│   │
+│   └── exceptions.py
+│
+├── tests/
+│   ├── routes/
+│   ├── services/
+│   ├── core/
+│   └── conftest.py
+│
 ├── config/
-│   ├── __init__.py
 │   └── settings.py
 │
 ├── logs/
@@ -112,20 +156,75 @@ banking-kafka-project/
 │   └── suspicious_transactions.csv
 │
 ├── assets/
-│   ├── architecture-diagram.png
-│   ├── dashboard.png
-│   ├── producer-output.png
-│   ├── consumer-output.png
-│   ├── kafka-topic.png
-│   └── demo.mp4
+│
+├── .github/
+│   └── workflows/
+│       └── ci.yml
 │
 ├── requirements.txt
 ├── README.md
+├── .env
 └── .gitignore
+
+---
+## REST API Layer
+
+The project includes a production-style FastAPI service exposing fraud analytics endpoints.
+
+Features:
+
+- Pagination
+- Filtering
+- Structured logging
+- Redis caching
+- Exception handling
+- Automated testing
+- OpenAPI / Swagger documentation
+
+Available endpoints:
+
+```text
+GET /api/frauds
+GET /api/latest-frauds
+GET /api/frauds/highest
+GET /api/statistics
+GET /api/frauds/by-city
+GET /api/frauds/daily-summary
 ```
 
 ---
+## Testing
 
+The project includes automated unit tests for:
+
+- Fraud services
+- Analytics services
+- Redis cache layer
+- Exception handlers
+- API routes
+
+Current coverage:
+
+```text
+100%
+```
+
+Tests are executed automatically through GitHub Actions.
+
+---
+## Continuous Integration
+
+The project uses GitHub Actions for automated CI/CD validation.
+
+On every push:
+
+- Dependencies are installed
+- Unit tests are executed
+- Coverage is validated
+
+This helps maintain code quality and reliability.
+
+---
 ## Fraud Detection Logic
 
 Transactions are flagged as suspicious when:
@@ -155,11 +254,16 @@ The dashboard displays:
 
 ---
 
-## PostgreSQL Database Storage
+## PostgreSQL Persistence Layer
 
 ![PostgreSQL Data](assets/postgresql-data.png)
 
-Suspicious transactions are persisted in PostgreSQL for real-time analytics and dashboard monitoring.
+Suspicious transactions are persisted in PostgreSQL for:
+
+* real-time analytics
+* dashboard monitoring
+* fraud investigation workflows
+* future reporting pipelines
 
 ---
 
@@ -167,19 +271,20 @@ Suspicious transactions are persisted in PostgreSQL for real-time analytics and 
 
 ![CSV Output](assets/csv-output.png)
 
-Suspicious transactions are automatically persisted into CSV files for further analysis and reporting.
+Suspicious transactions are automatically exported to CSV files for additional analysis and reporting.
 
 ---
 
-## Application Logging
+## Logging and Monitoring
 
 ![Log File](assets/log-file.png)
 
 The logging system records:
-- transaction processing
-- suspicious activity alerts
-- consumer errors
-- monitoring events
+
+* transaction processing
+* suspicious activity alerts
+* consumer errors
+* monitoring events
 
 ---
 
@@ -212,7 +317,19 @@ Start:
 
 ---
 
-### 2. Run Producer
+### 2. Create Kafka Topic
+
+```bash
+kafka-topics.bat --create ^
+--topic banking-transactions ^
+--bootstrap-server localhost:9092 ^
+--partitions 1 ^
+--replication-factor 1
+```
+
+---
+
+### 3. Run Producer
 
 ```bash
 python -m producer.main_producer
@@ -222,7 +339,7 @@ The producer continuously generates fake banking transactions and streams them i
 
 ---
 
-### 3. Run Consumer
+### 4. Run Consumer
 
 ```bash
 python -m consumer.main_consumer
@@ -234,40 +351,48 @@ The consumer:
 * detects suspicious activity
 * stores suspicious transactions
 * updates fraud statistics
-* logs events
+* logs monitoring events
 
 ---
 
-### 4. Run Dashboard
+### 5. Run Dashboard
 
 ```bash
 streamlit run dashboard/dashboard.py
 ```
 
-The Streamlit dashboard visualizes fraud analytics in real time.
+The dashboard visualizes fraud analytics in real time.
 
+---
+## Run Tests
+
+Run all tests:
+
+```bash
+pytest
+```
+
+Run coverage:
+
+```bash
+coverage run -m pytest
+coverage report -m
+```
 ---
 
 ## Logging
 
-Application logs are stored inside:
+Application logs are stored in:
 
 ```text
 logs/app.log
 ```
 
-The log system records:
-
-* transaction processing
-* suspicious activity alerts
-* consumer errors
-* monitoring events
-
 ---
 
 ## CSV Output
 
-Suspicious transactions are automatically stored inside:
+Suspicious transactions are stored in:
 
 ```text
 output/suspicious_transactions.csv
@@ -277,13 +402,12 @@ output/suspicious_transactions.csv
 
 ## Future Improvements
 
-* PostgreSQL integration
-* FastAPI REST API
-* Machine Learning fraud scoring
-* Docker support
-* Cloud deployment
-* PySpark Structured Streaming
-* Real-time alerting system
+- PySpark Structured Streaming
+- Machine Learning fraud scoring
+- AWS deployment
+- Azure deployment
+- Docker deployment
+- Real-time alert notifications
 
 ---
 
@@ -293,9 +417,9 @@ This project was created to practice:
 
 * event-driven architecture
 * Kafka streaming systems
-* real-time analytics
+* real-time analytics pipelines
 * backend engineering concepts
-* fraud detection systems
+* fraud monitoring systems
 * modular Python architecture
 * data engineering fundamentals
 
@@ -305,26 +429,26 @@ This project was created to practice:
 
 ## Descripción General
 
-Este proyecto simula un sistema de detección de fraude bancario en tiempo real utilizando Apache Kafka, Python y Streamlit.
+Este proyecto simula un sistema de detección de fraude bancario en tiempo real utilizando Apache Kafka, Python, PostgreSQL y Streamlit.
 
-El pipeline genera continuamente transacciones bancarias, las transmite mediante Kafka, las procesa en tiempo real, detecta actividades sospechosas, almacena transacciones fraudulentas en archivos CSV, registra eventos y visualiza analíticas de fraude mediante un dashboard en vivo.
+El pipeline genera continuamente transacciones bancarias, las transmite mediante Kafka, las procesa en tiempo real, detecta actividades sospechosas, almacena transacciones fraudulentas en PostgreSQL y archivos CSV, registra eventos y visualiza analíticas de fraude mediante un dashboard en vivo.
 
 El proyecto demuestra conceptos utilizados en sistemas modernos de fintech, backend engineering y data engineering.
 
 ---
 
-## Características
+## Características Principales
 
-* Streaming de transacciones en tiempo real
-* Arquitectura Producer/Consumer con Apache Kafka
-* Arquitectura modular del proyecto
-* Motor de detección de fraude
-* Persistencia en CSV
+* Arquitectura orientada a eventos
+* Pipeline Producer/Consumer con Kafka
+* Arquitectura modular en Python
+* Procesamiento en tiempo real
+* Detección de fraude
+* Persistencia en PostgreSQL
+* Exportación CSV
 * Sistema de logs y monitoreo
-* Analítica de fraude en tiempo real
-* Dashboard en vivo con Streamlit
-* Diseño orientado a eventos
-* Visualización de transacciones sospechosas
+* Dashboard en tiempo real
+
 
 ---
 
@@ -332,28 +456,19 @@ El proyecto demuestra conceptos utilizados en sistemas modernos de fintech, back
 
 * Python
 * Apache Kafka
-* confluent-kafka
+* PostgreSQL
+* SQLAlchemy
 * Streamlit
 * Pandas
 * JSON
 * CSV
 * Logging
-
----
-
-## Lógica de Detección de Fraude
-
-Las transacciones se consideran sospechosas cuando:
-
-* el monto supera el límite configurado
-* la transacción proviene de ubicaciones riesgosas
-
-Ejemplo:
-
-```python
-if amount > 4000:
-    return True
-```
+* FastAPI
+* Redis
+* Pytest
+* Coverage
+* GitHub Actions
+* Pydantic
 
 ---
 
@@ -361,136 +476,23 @@ if amount > 4000:
 
 ![Dashboard](assets/dashboard.png)
 
-El dashboard muestra:
-
-* transacciones sospechosas
-* métricas de fraude
-* analíticas de montos fraudulentos
-* actualizaciones en tiempo real
-
----
-
-## Almacenamiento en PostgreSQL
-
-![PostgreSQL Data](assets/postgresql-data.png)
-
-Las transacciones sospechosas se almacenan en PostgreSQL para analítica en tiempo real y monitoreo del dashboard.
-
----
-
-## Almacenamiento de Salida CSV
-
-![CSV Output](assets/csv-output.png)
-
-Las transacciones sospechosas se almacenan automáticamente en archivos CSV para análisis y reportes posteriores.
-
----
-
-## Sistema de Logs
-
-![Log File](assets/log-file.png)
-
-El sistema de logs registra:
-- procesamiento de transacciones
-- alertas de actividades sospechosas
-- errores del consumer
-- eventos de monitoreo
-
----
-
-## Ejecución del Producer
-
-![Producer Output](assets/producer-output.png)
-
----
-
-## Detección de Fraude del Consumer
-
-![Consumer Output](assets/consumer-output.png)
-
----
-
-## Mensajes del Topic Kafka
-
-![Kafka Topic](assets/kafka-topic.png)
-
----
-
-## Cómo Ejecutar el Proyecto
-
-### 1. Iniciar Apache Kafka
-
-Iniciar:
-
-* Kafka Controller
-* Kafka Broker
-
----
-
-### 2. Ejecutar el Producer
-
-```bash
-python -m producer.main_producer
-```
-
----
-
-### 3. Ejecutar el Consumer
-
-```bash
-python -m consumer.main_consumer
-```
-
----
-
-### 4. Ejecutar el Dashboard
-
-```bash
-streamlit run dashboard/dashboard.py
-```
-
----
-
-## Logs
-
-Los logs se almacenan en:
-
-```text
-logs/app.log
-```
-
----
-
-## Archivo CSV
-
-Las transacciones sospechosas se almacenan automáticamente en:
-
-```text
-output/suspicious_transactions.csv
-```
-
 ---
 
 ## Futuras Mejoras
 
-* Integración con PostgreSQL
 * API REST con FastAPI
-* Machine Learning para fraude
 * Docker
 * Despliegue en la nube
 * PySpark Structured Streaming
-* Sistema de alertas en tiempo real
+* Machine Learning para fraude
 
 ---
 
 ## Objetivos de Aprendizaje
 
-Este proyecto fue creado para practicar:
-
 * arquitectura orientada a eventos
-* sistemas de streaming con Kafka
+* streaming con Kafka
 * analítica en tiempo real
-* conceptos de backend engineering
+* backend engineering
+* data engineering
 * sistemas de detección de fraude
-* arquitectura modular en Python
-* fundamentos de data engineering

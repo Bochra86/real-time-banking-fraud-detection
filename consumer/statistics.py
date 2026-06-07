@@ -1,13 +1,13 @@
 total_transactions = 0
-suspicious_transactions = 0
 total_amount = 0
+suspicious_transactions = 0
 
 
 def update_statistics(transaction, suspicious):
 
     global total_transactions
-    global suspicious_transactions
     global total_amount
+    global suspicious_transactions
 
     total_transactions += 1
     total_amount += transaction["amount"]

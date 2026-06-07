@@ -1,6 +1,5 @@
 import csv
 import os
-
 from config.settings import CSV_OUTPUT_FILE
 
 
