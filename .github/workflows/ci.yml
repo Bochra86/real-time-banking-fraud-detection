@@ -2,10 +2,10 @@ name: Real-Time Banking Fraud Detection CI
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
 
   pull_request:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   test:
@@ -23,12 +23,18 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Show project structure
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "11"
+
+      - name: Show environment
         run: |
           pwd
-          ls
-          ls api
+          ls -la
           python --version
+          java -version
 
       - name: Install dependencies
         run: |
@@ -39,13 +45,17 @@ jobs:
         run: |
           python -c "from api.main import app; print('API IMPORT SUCCESS')"
 
+      - name: Verify Spark import
+        run: |
+          python -c "from pyspark.sql import SparkSession; print('SPARK IMPORT SUCCESS')"
+
       - name: Lint code
         run: |
           flake8 .
 
       - name: Run tests
         run: |
-          python -m pytest
+          python -m pytest -v
 
       - name: Coverage
         run: |

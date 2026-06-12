@@ -2,10 +2,11 @@ from confluent_kafka import Producer
 import json
 import random
 import time
+from producer.storage.all_transactions_storage import save_transaction
 
 producer = Producer({'bootstrap.servers': 'localhost:9092'})
 
-cities = ["Sao Paulo", "Rio", "Lisbon", "Madrid"]
+cities = ["Sao Paulo", "Rio", "Lisbon", "Madrid", "Unknown"]
 
 transaction_id = 1
 
@@ -19,6 +20,7 @@ while True:
     }
 
     producer.produce('bank-transactions', json.dumps(transaction).encode('utf-8'))
+    save_transaction(transaction)
 
     producer.flush()
 

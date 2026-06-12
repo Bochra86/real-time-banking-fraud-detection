@@ -4,4 +4,7 @@ logs/
 output/
 *.pyc
 .env
-
+ml/models/
+htmlcov/
+.coverage
+.pytest_cache/

@@ -31,25 +31,28 @@
 
 ## Overview
 
-This project simulates a real-time banking fraud detection system using Apache Kafka, Python, PostgreSQL, and Streamlit.
+This project is a production-style real-time banking fraud detection system designed using a modern event-driven and machine learning–powered architecture.
 
-The pipeline continuously generates banking transactions, streams them through Kafka, processes them in real time, detects suspicious activities, stores suspicious transactions in PostgreSQL and CSV files, logs events, and visualizes fraud analytics through a live dashboard.
+It simulates high-frequency banking transactions and processes them through a scalable data pipeline that combines stream processing, ML inference, rule-based detection, and real-time analytics.
 
-The project demonstrates concepts commonly used in modern fintech, backend engineering, and data engineering systems.
+The system is built with Python, Apache Kafka, Apache Spark Streaming, Machine Learning models, PostgreSQL, Redis, FastAPI, and Streamlit.
+
+The goal of the project is to demonstrate how real-world fintech platforms detect fraud in real time using a combination of streaming infrastructure, predictive models, and analytics systems.
 
 ---
 
 ## Engineering Highlights
 
-* Event-driven streaming architecture
-* Apache Kafka producer/consumer pipeline
-* Modular Python project structure
-* Real-time fraud detection workflow
-* PostgreSQL persistence layer
-* CSV persistence and reporting
-* Centralized logging and monitoring
-* Real-time analytics dashboard
-* Streamlit live visualization
+- Real-time transaction generation and streaming
+- Scalable event-driven architecture using Kafka
+- Stream processing using Spark Streaming
+- Machine Learning-based fraud detection (model inference layer)
+- Hybrid detection system (ML + rule-based engine)
+- Persistent storage in PostgreSQL + CSV backups
+- Centralized logging and monitoring
+- High-performance API layer using FastAPI
+- Redis caching for low-latency analytics
+- Interactive Streamlit dashboard for live monitoring
 
 ---
 
@@ -58,43 +61,47 @@ The project demonstrates concepts commonly used in modern fintech, backend engin
 ```text
 Python Producer
         ↓
-Apache Kafka
+Apache Kafka (Event Streaming)
         ↓
-Consumer Analytics Engine
+Apache Spark Streaming (Real-time Processing)
         ↓
-Fraud Detection Logic
+ML Fraud Detection Engine (Model Inference)
         ↓
-PostgreSQL + CSV Storage
+Analytics + Consumer Engine
         ↓
-FastAPI Analytics Layer
+Fraud Detection Rules Engine
         ↓
-Redis Cache
+PostgreSQL + CSV Storage Layer
+        ↓
+FastAPI (Analytics & Data API)
+        ↓
+Redis Cache Layer
         ↓
 REST API Endpoints
         ↓
-Streamlit Dashboard
+Streamlit Dashboard (Visualization Layer)
 ```
 
 ---
 
-## Technologies Used
+## 🧰 Technologies Used
 
-* Python
-* Apache Kafka
-* confluent-kafka
-* PostgreSQL
-* SQLAlchemy
-* Streamlit
-* Pandas
-* JSON
-* CSV
-* Logging
-* FastAPI
-* Redis
-* Pytest
-* Coverage
-* GitHub Actions
-* Pydantic
+- Python
+- Apache Kafka
+- confluent-kafka
+- PostgreSQL
+- SQLAlchemy
+- Streamlit
+- Pandas
+- JSON
+- CSV
+- Logging
+- FastAPI
+- Redis
+- Pytest
+- Coverage
+- GitHub Actions
+- Pydantic
 
 ---
 
@@ -113,36 +120,37 @@ banking-kafka-project/
 │   ├── statistics.py
 │   └── storage.py
 │
+├── ml/
+│   ├── models/
+│   ├── train_model.py
+│   └── predict.py
+│
 ├── dashboard/
 │   └── dashboard.py
 │
 ├── api/
 │   ├── main.py
-│   │
 │   ├── routes/
 │   │   └── fraud_routes.py
-│   │
 │   ├── services/
 │   │   ├── fraud_service.py
 │   │   └── analytics_service.py
-│   │
 │   ├── schemas/
 │   │   └── fraud_schema.py
-│   │
 │   ├── models/
 │   │   └── fraud_model.py
-│   │
 │   ├── database/
 │   │   ├── connection.py
 │   │   └── dependencies.py
-│   │
 │   ├── core/
 │   │   ├── cache.py
 │   │   ├── logging.py
 │   │   ├── middleware.py
 │   │   └── exception_handlers.py
-│   │
 │   └── exceptions.py
+│
+├── spark/
+│   └── spark_consumer.py
 │
 ├── tests/
 │   ├── routes/
@@ -160,15 +168,51 @@ banking-kafka-project/
 │   └── suspicious_transactions.csv
 │
 ├── assets/
-│
-├── .github/
-│   └── workflows/
-│       └── ci.yml
-│
 ├── requirements.txt
 ├── README.md
-├── .env
 └── .gitignore
+
+```
+---
+
+## 🤖 ML Layer (Fraud Detection Model)
+
+![ML Model](assets/ml_model_saved.png)
+
+
+This project includes a Machine Learning layer built using Apache Spark MLlib to detect fraudulent transactions.
+
+A Random Forest model is trained on historical banking transaction data loaded from CSV files.
+
+Feature engineering is applied using Spark transformations, including encoding categorical variables like city and assembling numerical features.
+
+A synthetic label is generated based on business rules (high amount, risky user IDs, unknown cities).
+
+The full pipeline includes StringIndexer, VectorAssembler, and RandomForestClassifier.
+
+All steps are combined into a Spark ML Pipeline for reproducibility and scalability.
+
+After training, the model is saved locally for later use in real-time fraud detection.
+
+📁 Saved Model Path:
+ml/models/fraud_model
+
+---
+
+### Feature Engineering & Label Creation
+
+A synthetic fraud label is created using business rules:
+
+```python
+df = df.withColumn(
+    "label",
+    when(
+        ((col("amount") > 3500) & (col("user_id") < 10))
+        | (col("city") == "Unknown"),
+        1
+    ).otherwise(0)
+)
+
 
 ```
 ---
@@ -270,21 +314,7 @@ On every push:
 This helps maintain code quality and reliability.
 
 ---
-## Fraud Detection Logic
 
-Transactions are flagged as suspicious when:
-
-* transaction amount exceeds a configured threshold
-* transaction originates from risky locations
-
-Example:
-
-```python
-if amount > 4000:
-    return True
-```
-
----
 
 ## Dashboard Preview
 
@@ -366,7 +396,7 @@ Start:
 
 ```bash
 kafka-topics.bat --create ^
---topic banking-transactions ^
+--topic bank-transactions ^
 --bootstrap-server localhost:9092 ^
 --partitions 1 ^
 --replication-factor 1
@@ -445,16 +475,6 @@ output/suspicious_transactions.csv
 
 ---
 
-## Future Improvements
-
-- PySpark Structured Streaming
-- Machine Learning fraud scoring
-- AWS deployment
-- Azure deployment
-- Docker deployment
-- Real-time alert notifications
-
----
 
 ## Learning Objectives
 
@@ -474,26 +494,28 @@ This project was created to practice:
 
 ## Descripción General
 
-Este proyecto simula un sistema de detección de fraude bancario en tiempo real utilizando Apache Kafka, Python, PostgreSQL, Redis, FastAPI y Streamlit.
+Este proyecto es un sistema de detección de fraude bancario en tiempo real con un enfoque de producción, diseñado utilizando una arquitectura moderna basada en eventos y potenciada por machine learning.
 
-El pipeline genera transacciones bancarias simuladas, las transmite mediante Kafka, las procesa en tiempo real, detecta actividades sospechosas, almacena los resultados en PostgreSQL y archivos CSV, expone analíticas mediante una API REST con FastAPI y visualiza métricas en un dashboard interactivo.
+Simula transacciones bancarias de alta frecuencia y las procesa a través de una canalización de datos escalable que combina procesamiento en streaming, inferencia de modelos de ML, detección basada en reglas y análisis en tiempo real.
+
+El sistema está construido con Python, Apache Kafka, Apache Spark Streaming, modelos de Machine Learning, PostgreSQL, Redis, FastAPI y Streamlit.
+
+El objetivo del proyecto es demostrar cómo las plataformas fintech del mundo real detectan fraudes en tiempo real utilizando una combinación de infraestructura de streaming, modelos predictivos y sistemas de análisis de datos.
 
 ---
 
 ## Características Principales
 
-* Arquitectura orientada a eventos
-* Streaming en tiempo real con Apache Kafka
-* Productores y consumidores desacoplados
-* Detección de fraude en tiempo real
-* Persistencia en PostgreSQL
-* Exportación de datos a CSV
-* API REST con FastAPI
-* Caché con Redis
-* Logging estructurado
-* Dashboard interactivo con Streamlit
-* Pruebas automatizadas con Pytest
-* Integración continua con GitHub Actions
+*  Generación y transmisión de transacciones en tiempo real  
+*  Arquitectura escalable basada en eventos utilizando Kafka  
+*  Procesamiento de flujos de datos con Spark Streaming  
+*  Detección de fraude basada en Machine Learning (capa de inferencia de modelos)  
+*  Sistema híbrido de detección (ML + motor basado en reglas)  
+*  Almacenamiento persistente en PostgreSQL + copias de seguridad en CSV  
+*  Registro centralizado de logs y monitoreo  
+*  Capa de API de alto rendimiento con FastAPI  
+*  Caché con Redis para análisis de baja latencia  
+*  Panel interactivo con Streamlit para monitoreo en tiempo real  
 
 ---
 
@@ -511,7 +533,49 @@ El pipeline genera transacciones bancarias simuladas, las transmite mediante Kaf
 * Coverage
 * GitHub Actions
 * Pydantic
+* Pytest
+* Coverage
+* GitHub Actions
+* Pydantic
 
+---
+
+## 🤖 Capa de Machine Learning (Modelo de Detección de Fraude)
+
+Este proyecto incluye una capa de Machine Learning construida con Apache Spark MLlib para detectar transacciones fraudulentas.
+
+Se entrena un modelo Random Forest utilizando datos históricos de transacciones bancarias cargados desde archivos CSV.
+
+Se aplica ingeniería de características utilizando transformaciones de Spark, incluyendo la codificación de variables categóricas como la ciudad y la combinación de variables numéricas en un solo vector de características.
+
+Se genera una etiqueta sintética basada en reglas de negocio (montos elevados, identificadores de usuarios de riesgo, ciudades desconocidas).
+
+El pipeline completo incluye StringIndexer, VectorAssembler y RandomForestClassifier.
+
+Todos los pasos se combinan en un Spark ML Pipeline para garantizar reproducibilidad y escalabilidad.
+
+Después del entrenamiento, el modelo se guarda localmente para su uso posterior en la detección de fraude en tiempo real.
+
+📁 Ruta del modelo guardado:
+ml/models/fraud_model
+
+---
+
+### Ingeniería de Características y Creación de Etiquetas
+
+Se crea una etiqueta sintética de fraude utilizando reglas de negocio:
+
+```python
+df = df.withColumn(
+    "label",
+    when(
+        ((col("amount") > 3500) & (col("user_id") < 10))
+        | (col("city") == "Unknown"),
+        1
+    ).otherwise(0)
+)
+
+```
 ---
 
 ## API REST
@@ -588,17 +652,6 @@ GitHub Actions ejecuta automáticamente:
 * Validación de cobertura
 
 en cada push al repositorio.
-
----
-
-## Futuras Mejoras
-
-* PySpark Structured Streaming
-* Modelos de Machine Learning para scoring de fraude
-* Despliegue en AWS
-* Despliegue en Azure
-* Contenedorización con Docker
-* Sistema de alertas en tiempo real
 
 ---
 

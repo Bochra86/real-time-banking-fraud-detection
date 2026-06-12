@@ -1,4 +1,7 @@
 from confluent_kafka import Consumer
+from pyspark.ml import PipelineModel
+from pyspark.sql import SparkSession
+
 import json
 import logging
 import os
@@ -12,6 +15,18 @@ from consumer.database import save_to_postgresql
 # Create folders if they don't exist
 os.makedirs("logs", exist_ok=True)
 os.makedirs("output", exist_ok=True)
+
+# Spark Session
+spark = (
+    SparkSession.builder
+    .appName("FraudPrediction")
+    .getOrCreate()
+)
+
+# Load the saved ML model
+model = PipelineModel.load(
+    "ml/models/fraud_model"
+)
 
 # Logging configuration
 logging.basicConfig(filename=LOG_FILE,
@@ -44,16 +59,39 @@ while True:
 
     logging.info(f"Transaction received: {transaction}")
 
-    # Fraud detection
+    # Create DataFrame
+    df = spark.createDataFrame([transaction])
+
+    # ML Prediction
+    # ---------------------------------
+
+    prediction_df = model.transform(df)
+
+    prediction = int(prediction_df.collect()[0]["prediction"])
+
+    print(f"ML Prediction: {'FRAUD' if prediction == 1 else 'NORMAL'}")
+
+    # Rule-based Detection
     suspicious = is_suspicious(transaction)  # bool
 
     # Update statistics
     update_statistics(transaction, suspicious)
 
     # Handle suspicious transactions
-    if suspicious:
+    if suspicious or prediction == 1:
 
-        print("⚠️ Suspicious transaction detected!")
+        if prediction == 1 and suspicious:
+
+            print("🚨 ML Fraud Detected!")
+            print("⚠️ Rule-Based Suspicious Transaction!")
+
+        elif prediction == 1:
+
+            print("🚨 ML Fraud Detected!")
+
+        elif suspicious:
+
+            print("⚠️ Rule-Based Suspicious Transaction!")
 
         logging.warning(f"Suspicious transaction: {transaction}")
 
